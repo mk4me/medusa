@@ -22,21 +22,23 @@ def pixel_filter( treshold):
     return inner
 
 # loads file, finds contours and filters them
-def find_countours(filename):
+def find_countours(filename, contour_filter = pixel_filter(50)):
     img = io.imread(filename)
     r = img[:,:,0]
     contours = find_contours_raw(r)
-    return (filter_contours(contours, pixel_filter(50)), r.shape)
+    return (filter_contours(contours, contour_filter), r.shape)
 
-# writes an image of contours for given size
-def write_contours(filename, contours, size):
+def create_image_from_contours(contours, size):
     res = np.zeros(size, dtype=np.int)
     for n, contour in enumerate(contours):
         for x,y in contour:
-            res[int(x+0.5), int(y+0.5)] = 255
+            res[int(round(x)), int(round(y))] = 255
+    return res
 
+# writes an image of contours for given size
+def write_contours(filename, contours, size):
+    res = create_image_from_contours(contours, size)
     io.imsave(filename, res)
-
 
 if __name__ == "__main__":
     (contours, size) = find_countours('test.png')
