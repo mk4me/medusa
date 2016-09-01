@@ -20,5 +20,8 @@ if __name__ == "__main__":
         rr, cc = skimage.draw.line(p1[0], p1[1], p2[0], p2[1])
         img[rr, cc] = 255
 
+    for c in ch.centers:
+        big_pixel(img, c)
+
     io.imsave('mst_test.png', img)
 
