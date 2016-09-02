@@ -105,11 +105,13 @@ def applyParameters(params):
 def processFile(inFilePath, outFilePath, params):
     
     print "processFile: " + inFilePath
+    # for debug!
     #shutil.copy2(inFilePath, outFilePath)
-    (contours, size) = find_countours(inFilePath)
-    write_contours(outFilePath+"_contours.png", contours, size)
-    find_mst_test(inFilePath, outFilePath+ '_mst_test.png')
-    create_shape_for_file(inFilePath, outFilePath, 0.5)
+    #(contours, size) = find_countours(inFilePath)
+    #write_contours(outFilePath+"_contours.png", contours, size)
+    #find_mst_test(inFilePath, outFilePath+ '_mst_test.png')
+
+    create_shape_for_synovitis(inFilePath, outFilePath, 0.5)
     print "- generated: " + outFilePath
     return
 

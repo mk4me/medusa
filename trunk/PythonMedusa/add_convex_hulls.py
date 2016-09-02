@@ -57,24 +57,25 @@ def flood_fill(contour):
 # przecina kontur dla podanego px
 # zwraca tablice z wszystkimi wrtosciami y, ktore zostaly przeciete
 def get_points_for_x(contour, px):
-    ally = [y for (x, y) in contour if int(x) == px]
-    return ally
+    all_y = [y for (x, y) in contour if int(x) == px]
+    return all_y
 
 # przecina kontur dla podanego py
 # zwraca tablice z wszystkimi wrtosciami x, ktore zostaly przeciete
 def get_points_for_y(contour, py):
-    allx = [x for (x, y) in contour if int(y) == py]
-    return allx
+    all_x = [x for (x, y) in contour if int(y) == py]
+    return all_x
 
 # przechodzimy kontur horyzontalnie od x = start do end, badajac kolejne cieciwy
 # zwracamy punkty, ktore tworza najdluzsza
 def traverseX(contour, start, end):
     ranges = []
     for x in range(start[0], end[0]+1):
-        ally = get_points_for_x(contour, x)
-        if len(ally):
-            minY, maxY = min(ally), max(ally)
+        all_y = get_points_for_x(contour, x)
+        if len(all_y):
+            minY, maxY = min(all_y), max(all_y)
             ranges.append((x, maxY - minY, minY, maxY))
+    # szukamy najdluzszej cieciwy
     max_val = max(ranges, key = lambda x: x[1])
     return max_val
 
@@ -83,11 +84,11 @@ def traverseX(contour, start, end):
 def traverseY(contour, start, end):
     ranges = []
     for y in range(start[1], end[1]+1):
-        allx = get_points_for_y(contour, y)
-        if len(allx):
-            minX, maxX = min(allx), max(allx)
+        all_x = get_points_for_y(contour, y)
+        if len(all_x):
+            minX, maxX = min(all_x), max(all_x)
             ranges.append((y, maxX - minX, minX, maxX))
-
+    # szukamy najdluzszej cieciwy
     max_val = max(ranges, key = lambda y: y[1])
     return max_val
 
@@ -160,9 +161,11 @@ def get_max_points(contour, terminal, center, ratio = 1):
 
 # oblicza kontury i laczy je miedzy soba
 def create_shape(image, ratio):
-    # wykrywa kontury
+    # wykrywa kontury i odrzuca niepotrzebne
     (contours, size) = find_countours_for_image(image)
     # helper ulatwia poslugiwanie sie konturami
+    # wyznacza macierz odleglosci miedzy konturami, znajduje minimalne
+    # wyznacza srodki konturow i tworzy graf dla MST
     ch = ContoursHelper(contours)
     # graf dla MST
     G = ch.create_graph()
@@ -198,6 +201,10 @@ def create_shape(image, ratio):
 
         #wylicza convex hull i wstawia go na nasz glowny obraz
         convex = convex_hull_image(convex_image)
+        # otrzymujemy juz wypelniony convex!
+        # w convex sa indeksy pikseli tworzacych convex hull
+        # python umozliwia takie sprytne indeksowanie
+        # kazdy piksela z convex otrzymuje wartosc 255
         img[convex] = 255
 
     # wstawia na glowny obraz wypelnienie konturow
@@ -208,12 +215,13 @@ def create_shape(image, ratio):
     return img
 
 # laczy kontury ze soba, dodatkowo wczytuje i zapisuje pliki
-def create_shape_for_file(infile, outfile, ratio):
+def create_shape_for_synovitis(infile, outfile, ratio):
     img = io.imread(infile)
+    # wyciagamy pojedynczy kanal
     r = img[:, :, 0]
-    shape_image = create_shape(r, 0.7)
+    shape_image = create_shape(r, ratio)
     io.imsave(outfile, shape_image)
 
 if __name__ == "__main__":
-    create_shape_for_file('test.png', 'convexhulls_test.png', 0.5)
+    create_shape_for_synovitis('test.png', 'convexhulls_test.png', 0.5)
 

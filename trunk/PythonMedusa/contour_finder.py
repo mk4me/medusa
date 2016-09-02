@@ -9,6 +9,7 @@ def find_contours_raw(image):
     #return [c.astype(dtype=np.int) for c in contours]
 
 # filters array of contours with given filter
+# filter is a function which decides if given contour should stay
 def filter_contours(contours, filter):
     if (filter):
         return [c for c in contours if filter(c)]
@@ -34,11 +35,12 @@ def find_countours(filename, contour_filter = pixel_filter(50)):
 
 # creates an image of contours for given size
 def create_image_from_contours(contours, size):
-    res = np.zeros(size, dtype=np.int)
+    # empty image
+    result_image = np.zeros(size, dtype=np.int)
     for n, contour in enumerate(contours):
         for x, y in contour:
-            res[int(round(x)), int(round(y))] = 255
-    return res
+            result_image[int(round(x)), int(round(y))] = 255
+    return result_image
 
 # writes an image of contours for given size
 def write_contours(filename, contours, size):
