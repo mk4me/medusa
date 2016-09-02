@@ -6,6 +6,8 @@ import glob
 import shutil
 from opp import *
 from contour_finder import *
+from find_MST import *
+from add_convex_hulls import *
 
 DEFAULT_IN_POSTFIX='.png'
 DEFAULT_OUT_POSTFIX='.png'
@@ -105,7 +107,9 @@ def processFile(inFilePath, outFilePath, params):
     print "processFile: " + inFilePath
     #shutil.copy2(inFilePath, outFilePath)
     (contours, size) = find_countours(inFilePath)
-    write_contours(outFilePath,contours, size)
+    write_contours(outFilePath+"_contours.png", contours, size)
+    find_mst_test(inFilePath, outFilePath+ '_mst_test.png')
+    create_shape_for_file(inFilePath, outFilePath, 0.5)
     print "- generated: " + outFilePath
     return
 
@@ -147,3 +151,4 @@ def main(argv):
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
+    #sys.exit(main(["DataInputDir=./input;DataOutputDir=./output"]))

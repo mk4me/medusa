@@ -2,12 +2,13 @@ from MinimumSpanningTree import *
 from compute_distances import *
 import skimage.draw
 
-
+# na podstawie grafu, tworzy MST
 def find_MST(G):
     return MinimumSpanningTree(G)
 
-if __name__ == "__main__":
-    (contours, size) = find_countours('test.png')
+#generuje plik testowy z widocznymi polaczeniami mst
+def find_mst_test(infile, outfile):
+    (contours, size) = find_countours(infile)
     ch = ContoursHelper(contours)
     G = ch.create_graph()
     T = find_MST(G)
@@ -23,5 +24,8 @@ if __name__ == "__main__":
     for c in ch.centers:
         big_pixel(img, c)
 
-    io.imsave('mst_test.png', img)
+    io.imsave(outfile, img)
+
+if __name__ == "__main__":
+    find_mst_test('test.png', 'mst_test.png')
 

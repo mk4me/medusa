@@ -21,6 +21,7 @@ def pixel_filter( treshold):
         return len(contour) > treshold
     return inner
 
+# for given image finds contours and filters them
 def find_countours_for_image(img, contour_filter = pixel_filter(50)):
     contours = find_contours_raw(img)
     return (filter_contours(contours, contour_filter), img.shape)
@@ -31,6 +32,7 @@ def find_countours(filename, contour_filter = pixel_filter(50)):
     r = img[:, :, 0]
     return find_countours_for_image(r, contour_filter)
 
+# creates an image of contours for given size
 def create_image_from_contours(contours, size):
     res = np.zeros(size, dtype=np.int)
     for n, contour in enumerate(contours):
@@ -46,12 +48,6 @@ def write_contours(filename, contours, size):
 if __name__ == "__main__":
     (contours, size) = find_countours('test.png')
     write_contours("test_result.png", contours, size)
-    '''
-    for n, contour in enumerate(contours):
-        for x,y in contour:
-            res = np.zeros(size, dtype=np.int)
-            res[int(x+0.5), int(y+0.5)] = 255
-            io.imsave('testres' + str(n) +'.png', res)
-    '''
+
 
 
